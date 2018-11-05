@@ -182,7 +182,11 @@ print(' ')
 
 #--------------------------------------------------------------------------------------------------#
 # Load utils and Farquhar functions for data QA/QC and optimization
-source(file.path(r.functions,'photo.processing.functions.R'))
+if (use_GitHub) {
+  print("*** Loading helper functions from GitHub source ***")
+} else {
+  source(file.path(r.functions,'photo.processing.functions.R'))
+}
 #--------------------------------------------------------------------------------------------------#
 
 
