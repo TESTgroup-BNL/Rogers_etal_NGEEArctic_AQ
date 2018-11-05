@@ -429,7 +429,12 @@ output.data <- data.frame(samples,out.diagnostics,mean_Ci_init_slope=mean_Ci,Amb
                           Anet.1500=Anet.1500,Anet.1800=Anet.1800,Anet.2000=Anet.2000,Rd=Rd,
                           LCP=LCP,LUE.max=LUE.max,ILUE.max=ILUE.max,
                           RMSE.DEoptim=RMSE.DEoptim,RMSE.photo=RMSE.photo)
-output.dataset <- paste(strsplit(dataset,".csv"),".processed.csv",sep="")
+if (use_GitHub) {
+  output.dataset <- "Example_fitted_A-Q_response_curves.csv"
+} else {
+  output.dataset <- paste(strsplit(dataset,".csv"),".processed.csv",sep="")
+}
+
 write.csv(output.data,file=paste(out.dir,"/",output.dataset,sep=""),row.names=FALSE)
 
 rm(list=ls(all=TRUE))   # clear workspace
