@@ -26,7 +26,7 @@ rm(list=ls(all=TRUE))   # clear workspace
 graphics.off()          # close any open graphics
 closeAllConnections()   # close any open connections to files
 
-list.of.packages <- c("readxl","tools","DEoptim")  # packages needed for script
+list.of.packages <- c("httr","readxl","tools","DEoptim")  # packages needed for script
 # check for dependencies and install if needed
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
@@ -61,7 +61,8 @@ in.dir <- file.path('Rogers_etal_NGEEArctic_AQ/input_data/')  # example
 
 ### Define input data file name.
 if (use_GitHub) {
-  githubURL <- 
+  githubURL <- "https://raw.githubusercontent.com/TESTgroup-BNL/Rogers_etal_NGEEArctic_AQ/master/input_data/NGEE-Arctic_2016_AQ_Raw_Data.csv"
+  dataset <- source_GitHubData(githubURL)
 } else {
   dataset <- 'NGEE-Arctic_2016_AQ_Raw_Data.csv'  # using a specific data file on the local machine
 }
