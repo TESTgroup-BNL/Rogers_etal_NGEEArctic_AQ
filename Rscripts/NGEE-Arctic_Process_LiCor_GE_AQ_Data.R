@@ -26,6 +26,23 @@ rm(list=ls(all=TRUE))   # clear workspace
 graphics.off()          # close any open graphics
 closeAllConnections()   # close any open connections to files
 
+list.of.packages <- c("readxl","tools","DEoptim")  # packages needed for script
+# check for dependencies and install if needed
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
+# define function to grab files from GitHub
+#devtools::source_gist("gist.github.com/christophergandrud/4466237")
+source_GitHubData <-function(url, sep = ",", header = TRUE) {
+  require(httr)
+  request <- GET(url)
+  stop_for_status(request)
+  handle <- textConnection(content(request, as = 'text'))
+  on.exit(close(handle))
+  read.table(handle, sep = sep, header = header)
+}
+
+# load libraries
 library(readxl)
 library(tools)
 library(DEoptim)
@@ -34,13 +51,20 @@ library(DEoptim)
 
 #---------------- *User defined settings.* --------------------------------------------------------#
 ### Location of R scripts.  Needed for Farquhar model optimization. Contains functions.
-r.functions <- file.path('')  # Path to photo.processing.functions.R
+r.functions <- file.path('./')  # Path to photo.processing.functions.R
 
-### Define directory to input LiCor 6400 data file to process 
-in.dir <- file.path('')
+### Use GitHub data source?
+use_GitHub <- TRUE
+
+### Define directory containing the input LiCor 6400 data file to process 
+in.dir <- file.path('Rogers_etal_NGEEArctic_AQ/input_data/')  # example
 
 ### Define input data file name.
-dataset <- ''
+if (use_GitHub) {
+  githubURL <- 
+} else {
+  dataset <- 'NGEE-Arctic_2016_AQ_Raw_Data.csv'  # using a specific data file on the local machine
+}
 
 ### Define input file to be processed
 extension <- file_ext(dataset)
@@ -72,9 +96,11 @@ summary(ge.data)    ## Summary of dataset
 
 
 ### Define main output directory 
-out.dir <- file.path('')
+out.dir <- 'scratch'
+if (! file.exists(out.dir)) dir.create(file.path("~",out.dir),recursive=TRUE)
 unlink(out.dir,recursive=T) # delete old output if rerunning
-if (! file.exists(out.dir)) dir.create(out.dir,recursive=TRUE)
+setwd(file.path("~",out.dir)) # set working directory
+getwd()  # check wd
 
 
 # *********************************** QA/QC Options ***********************************
