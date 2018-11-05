@@ -26,7 +26,7 @@ rm(list=ls(all=TRUE))   # clear workspace
 graphics.off()          # close any open graphics
 closeAllConnections()   # close any open connections to files
 
-list.of.packages <- c("httr","readxl","tools","DEoptim")  # packages needed for script
+list.of.packages <- c("httr","RCurl","readxl","tools","DEoptim")  # packages needed for script
 # check for dependencies and install if needed
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
@@ -39,7 +39,7 @@ source_GitHubData <-function(url, sep = ",", header = TRUE) {
   stop_for_status(request)
   handle <- textConnection(content(request, as = 'text'))
   on.exit(close(handle))
-  read.table(handle, sep = sep, header = header)
+  read.table(handle, sep = sep, header = header, quote = "")
 }
 
 # load libraries
@@ -50,32 +50,40 @@ library(DEoptim)
 
 
 #---------------- *User defined settings.* --------------------------------------------------------#
-### Location of R scripts.  Needed for Farquhar model optimization. Contains functions.
-r.functions <- file.path('./')  # Path to photo.processing.functions.R
-
 ### Use GitHub data source?
 use_GitHub <- TRUE
 
+### Location of R scripts.  Needed for Farquhar model optimization. Contains functions.
+if (use_GitHub) {
+  r.functions <- RCurl::getURL("https://raw.githubusercontent.com/TESTgroup-BNL/Rogers_etal_NGEEArctic_AQ/master/Rscripts/photo.processing.functions.R", 
+                ssl.verifypeer = FALSE)
+  eval(parse(text = r.functions))
+} else {
+  r.functions <- file.path('')  # Path to photo.processing.functions.R
+}
+
 ### Define directory containing the input LiCor 6400 data file to process 
-in.dir <- file.path('Rogers_etal_NGEEArctic_AQ/input_data/')  # example
+in.dir <- file.path('Rogers_etal_NGEEArctic_AQ/input_data/')  # example, or see below when using GitHub as the source
+dataset <- 'NGEE-Arctic_2016_AQ_Raw_Data.csv'  # using a specific data file on the local machine
 
 ### Define input data file name.
 if (use_GitHub) {
   githubURL <- "https://raw.githubusercontent.com/TESTgroup-BNL/Rogers_etal_NGEEArctic_AQ/master/input_data/NGEE-Arctic_2016_AQ_Raw_Data.csv"
   dataset <- source_GitHubData(githubURL)
+  ge.data <- dataset
 } else {
-  dataset <- 'NGEE-Arctic_2016_AQ_Raw_Data.csv'  # using a specific data file on the local machine
-}
-
-### Define input file to be processed
-extension <- file_ext(dataset)
-if ("csv" %in% extension) {
-  print("*.csv")
-  ge.data <- read.table(file.path(in.dir,dataset), header=T,sep=",",quote = "")
-} else if ("xls" %in% extension | "xlsx" %in% extension) {
-  print("*.xl file")
-  ge.data <- read_excel(path = file.path(in.dir,dataset), sheet = 1)
-  ge.data <- data.frame(ge.data)
+  dataset <- dataset  # using a specific data file on the local machine
+  
+  ### Define input file to be processed
+  extension <- file_ext(dataset)
+  if ("csv" %in% extension) {
+    print("*.csv")
+    ge.data <- read.table(file.path(in.dir,dataset), header=T,sep=",",quote = "")
+  } else if ("xls" %in% extension | "xlsx" %in% extension) {
+    print("*.xl file")
+    ge.data <- read_excel(path = file.path(in.dir,dataset), sheet = 1)
+    ge.data <- data.frame(ge.data)
+  }
 }
 
 # clean up
@@ -97,10 +105,10 @@ summary(ge.data)    ## Summary of dataset
 
 
 ### Define main output directory 
-out.dir <- 'scratch'
-if (! file.exists(out.dir)) dir.create(file.path("~",out.dir),recursive=TRUE)
+out.dir <- file.path(path.expand('~/scratch/Rogers_etal_NGEEArctic_AQ_Fits/'))
 unlink(out.dir,recursive=T) # delete old output if rerunning
-setwd(file.path("~",out.dir)) # set working directory
+if (! file.exists(out.dir)) dir.create(out.dir,recursive=TRUE)
+setwd(file.path(out.dir)) # set working directory
 getwd()  # check wd
 
 
