@@ -104,14 +104,17 @@ if (is.null(ge.data$Ci_Ca) && !is.null(ge.data$Ci_over_Ca)) {
 summary(ge.data)    ## Summary of dataset
 
 
+#--------------------------------------------------------------------------------------------------#
 ### Define main output directory 
 out.dir <- file.path(path.expand('~/scratch/Rogers_etal_NGEEArctic_AQ_Fits/'))
 unlink(out.dir,recursive=T) # delete old output if rerunning
 if (! file.exists(out.dir)) dir.create(out.dir,recursive=TRUE)
 setwd(file.path(out.dir)) # set working directory
 getwd()  # check wd
+#--------------------------------------------------------------------------------------------------#
 
 
+#--------------------------------------------------------------------------------------------------#
 # *********************************** QA/QC Options ***********************************
 ###
 aQY.lower.cutoff <- 15  # lower light level to include in AQ fit
@@ -165,6 +168,7 @@ CR <- 0.6                         ## Crossover probability from interval [0,1]. 
 # the maximization of net photosynthesis in Acer saccharum: a modelling assessment. 
 # Annals of Botany, 110, 731-741
 # ************************************* References ************************************
+#--------------------------------------------------------------------------------------------------#
 
 
 #==================================================================================================#

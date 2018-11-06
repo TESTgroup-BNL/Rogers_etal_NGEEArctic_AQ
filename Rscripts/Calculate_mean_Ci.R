@@ -9,15 +9,63 @@ rm(list=ls(all=TRUE))   # clear workspace
 graphics.off()          # close any open graphics
 closeAllConnections()   # close any open connections to files
 
+list.of.packages <- c("httr","RCurl","readxl","tools")  # packages needed for script
+# check for dependencies and install if needed
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages, dependencies = TRUE)
+
+# define function to grab files from GitHub
+#devtools::source_gist("gist.github.com/christophergandrud/4466237")
+source_GitHubData <-function(url, sep = ",", header = TRUE) {
+  require(httr)
+  request <- GET(url)
+  stop_for_status(request)
+  handle <- textConnection(content(request, as = 'text'))
+  on.exit(close(handle))
+  read.table(handle, sep = sep, header = header, quote = "")
+}
+
 library(readxl)
 library(tools)
 #--------------------------------------------------------------------------------------------------#
 
 
 #--------------------------------------------------------------------------------------------------#
-### Location of R scripts.  Needed for Farquhar model optimization. Contains functions.
-r.functions <- '/Volumes/TEST/Manuscripts/Rogers_Arctic_AQ/R_Scripts/Photo/'  # Path to photo.processing.functions.R
-source(paste0(r.functions,'/','photo.processing.functions.R'))
+### Use GitHub data source?
+use_GitHub <- TRUE
+
+### Location of R scripts.
+if (use_GitHub) {
+  r.functions <- RCurl::getURL("https://raw.githubusercontent.com/TESTgroup-BNL/Rogers_etal_NGEEArctic_AQ/master/Rscripts/photo.processing.functions.R", 
+                               ssl.verifypeer = FALSE)
+  eval(parse(text = r.functions))
+} else {
+  r.functions <- file.path('')  # Path to photo.processing.functions.R
+}
+
+### Define directory containing the input LiCor 6400 data file to process 
+in.dir <- file.path('Rogers_etal_NGEEArctic_AQ/input_data/')  # example, or see below when using GitHub as the source
+dataset <- 'NGEE-Arctic_2016_AQ_Raw_Data.csv'  # using a specific data file on the local machine
+
+### Define input data file name.
+if (use_GitHub) {
+  githubURL <- "https://raw.githubusercontent.com/TESTgroup-BNL/Rogers_etal_NGEEArctic_AQ/master/input_data/NGEE-Arctic_2016_AQ_Raw_Data.csv"
+  dataset <- source_GitHubData(githubURL)
+  ge.data <- dataset
+} else {
+  dataset <- dataset  # using a specific data file on the local machine
+  
+  ### Define input file to be processed
+  extension <- file_ext(dataset)
+  if ("csv" %in% extension) {
+    print("*.csv")
+    ge.data <- read.table(file.path(in.dir,dataset), header=T,sep=",",quote = "")
+  } else if ("xls" %in% extension | "xlsx" %in% extension) {
+    print("*.xl file")
+    ge.data <- read_excel(path = file.path(in.dir,dataset), sheet = 1)
+    ge.data <- data.frame(ge.data)
+  }
+}
 
 # *********************************** QA/QC Options ***********************************
 ### Sample QC checks
@@ -26,23 +74,6 @@ Ci.cutoff <- c(0,2000)    ## Throw out observations with Ci out of bounds
 Tleaf.cutoff <- 0.9999    ## How much Tleaf variation to accept in curve data. E.g. 1 
 # would allow variation of 1 degree around the mean Tleaf
 # *********************************** QA/QC Options ***********************************
-
-### Input LI6400 dataset.  First define location of file (i.e. directory). 
-in.dir <- '/Volumes/TEST/Projects/NGEE-Arctic/Data/Barrow/Gas_Exchange/AQ/field data/Final_Data_Compilation/'
-
-#dataset <- 'NGEE-Arctic_2014_AQ_Raw_Data_AR_QA2.xlsx'
-dataset <- 'NGEE-Arctic_2016_AQ_Raw_Data_AR_QA3.xlsx'
-
-### Define input file to be processed
-extension <- file_ext(dataset)
-if ("csv" %in% extension) {
-  print("*.csv")
-  ge.data <- read.table(file.path(in.dir,dataset), header=T,sep=",",quote = "")
-} else if ("xls" %in% extension | "xlsx" %in% extension) {
-  print("*.xl file")
-  ge.data <- read_excel(path = file.path(in.dir,dataset), sheet = 1)
-  ge.data <- data.frame(ge.data)
-}
 
 # clean up
 if (!is.null(ge.data$Rep)){
@@ -65,10 +96,11 @@ summary(ge.data)    ## Summary of dataset
 
 #--------------------------------------------------------------------------------------------------#
 ### Main output directory 
-#out.dir <- file.path('/Volumes/TEST/Manuscripts/Rogers_Arctic_AQ/R_Ouput/Mean_Ci/2014/')
-out.dir <- file.path('/Volumes/TEST/Manuscripts/Rogers_Arctic_AQ/R_Ouput/Mean_Ci/2016/')
+out.dir <- file.path(path.expand('~/scratch/Rogers_etal_NGEEArctic_AQ_Fits/Mean_Ci/2016/'))
 unlink(out.dir,recursive=T) # delete old output if rerunning
 if (! file.exists(out.dir)) dir.create(out.dir,recursive=TRUE)
+setwd(file.path(out.dir)) # set working directory
+getwd()  # check wd
 #--------------------------------------------------------------------------------------------------#
 
 
@@ -86,8 +118,6 @@ rm(out.qc.ge.data,ge.data)
 
 #--------------------------------------------------------------------------------------------------#
 ### Calculate mean Ci
-#ge.data.qc$Sample.Info <- ge.data.qc$Sample.Info[,-2]
-
 # Get sample info and summary stats
 samples <- unique(ge.data.qc$Sample.Info)
 
