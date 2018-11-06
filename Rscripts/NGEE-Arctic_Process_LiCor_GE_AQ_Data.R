@@ -29,7 +29,7 @@ closeAllConnections()   # close any open connections to files
 list.of.packages <- c("httr","RCurl","readxl","tools","DEoptim")  # packages needed for script
 # check for dependencies and install if needed
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-if(length(new.packages)) install.packages(new.packages)
+if(length(new.packages)) install.packages(new.packages, dependencies = TRUE)
 
 # define function to grab files from GitHub
 #devtools::source_gist("gist.github.com/christophergandrud/4466237")

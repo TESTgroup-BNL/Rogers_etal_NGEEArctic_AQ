@@ -10,7 +10,7 @@
 #
 #
 #
-#    --- Last updated:  10.10.2017 By Shawn P. Serbin <sserbin@bnl.gov>
+#    --- Last updated:  11.06.2018 By Shawn P. Serbin <sserbin@bnl.gov>
 ####################################################################################################
 
 
@@ -63,8 +63,8 @@ ok <- require(PEcAn.assim.batch) ; if (! ok) {
 
 ok <- require(PEcAnRTM) ; if (! ok) {
   library(devtools)
-  #install_github("PEcAnProject/pecan", subdir="modules/rtm", ref = "develop") # use development version of PEcAn
-  install_github('ashiklom/pecan/modules/rtm@rtm-no-neff')
+  install_github("PEcAnProject/pecan", subdir="modules/rtm", ref = "develop") # use development version of PEcAn
+  #install_github('ashiklom/pecan/modules/rtm@rtm-no-neff')
   
 } else {
   print("*** Package found: PEcAnRTM ***")
@@ -76,7 +76,18 @@ library(PEcAnRTM)
 
 
 #--------------------------------------------------------------------------------------------------#
+### Use GitHub data source?
+use_GitHub <- TRUE
+
 ### Import leaf spectra and leaf trait / species info
+if (use_GitHub) {
+  spectra_file
+} else {
+  
+}
+
+
+
 in_dir <- '/Volumes/TEST/Projects/NGEE-Arctic/Data/Barrow/Spectra/SVC_HR-1024i/2015_Data/Leaf/Leaf_Chlorophyll/20150715/Leaf_Clip/Processed/Averaged_Spectra/'
 spectra_file <- 'SVC_averaged_linear_interpolated_spectra.csv'
 #refl_data <- read_excel(path=file.path(in_dir,spectra_file), sheet = 2)
