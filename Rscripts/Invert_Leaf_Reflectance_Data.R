@@ -153,13 +153,13 @@ title_var <- "BNL_Barcode"
 # Set progress bar
 # ?see txtProgressBar
 print("Starting Inversion:")
-print(paste0("Inverting: ", dim(sub_refl_data)[1]))
+print(paste0("Inverting a total of: ", dim(sub_refl_data)[1], "leaf reflectance measurements"))
 print(" ")
 pb <- txtProgressBar(min = 0, max = dim(sub_refl_data)[1], width= 50,style = 3)
 system.time(for (i in seq_along(1:dim(sub_refl_data)[1]) ) {
   #system.time(for (i in seq_along(1:3) ) {
   print(" ")
-  print(paste0("Inverting: ",unlist(refl_spec_info2[i,title_var])))
+  print(paste0("Inverting: ",unlist(refl_samp_info[i,title_var])))
   samples <- invert_bt(observed = t(sub_refl_data[i,]), model = model, prior = prior,
                        custom_settings = list(init = list(iterations = 2000),
                                               loop = list(iterations = 1000),
