@@ -17,7 +17,7 @@
 #   install.packages('DEoptim')
 #
 #
-#  	--- Last updated:  02.23.2018 By Shawn P. Serbin <sserbin@bnl.gov>
+#  	--- Last updated: 11.06.2018 By Shawn P. Serbin <sserbin@bnl.gov>
 ####################################################################################################
 
 
@@ -118,12 +118,12 @@ getwd()  # check wd
 #--------------------------------------------------------------------------------------------------#
 # *********************************** QA/QC Options ***********************************
 ###
-aQY.lower.cutoff <- 15  # lower light level to include in AQ fit
-aQY.cutoff <- 80       # Upper AQ fit cutoff umols PAR  Options: E.g. 150, 100, 75
-Amax.cutoff <- 450      # umols PAR
-high_light.cutoff <- 2200  # umols PAR
-aQY.min.n <- 3          # minimum number of obs for calculating aparent QY.  Best is 3.
-Amax.min.n <- 2         # minimum number of obs for calculating Amax.  Best is 3.
+aQY.lower.cutoff <- 15      # lower light level to include in AQ fit
+aQY.cutoff <- 80            # Upper AQ fit cutoff umols PAR  Options: E.g. 150, 100, 75
+Amax.cutoff <- 450          # umols PAR
+high_light.cutoff <- 2200   # umols PAR
+aQY.min.n <- 3              # minimum number of obs for calculating aparent QY.  Best is 3.
+Amax.min.n <- 2             # minimum number of obs for calculating Amax.  Best is 3.
 
 ### Sample QC checks
 Cond.cutoff <- 0.05       ## Throw out observations with Cond < cutoff. E.g. 0.08
@@ -270,8 +270,8 @@ RMSE.DEoptim <- array(data=NA,dim=dim(samples)[1])
 RMSE.photo <- array(data=NA,dim=dim(samples)[1])
 
 # Main outer loop
-#system.time(for (i in seq_along(1:dim(samples)[1])) {
-system.time(for (i in 1:4) {
+for (i in seq_along(1:dim(samples)[1])) {
+#system.time(for (i in 1:4) {
   sub.data <- merge(data,samples[i,],by=names(samples[i,]))
   sub.data = sub.data[order(sub.data$PARi),]
   print("--- Processing Sample: ")
@@ -412,7 +412,7 @@ system.time(for (i in 1:4) {
   print("** Removing temp objects ***")
   rm(chk2,chk3, reg, IaQY, f.model, fit, tempout, mod.Photo, residuals, mod.PARi, mod.IaQY,
      mod.Photo, LUE)
-}) # End for loop
+} # End for loop
 #--------------------------------------------------------------------------------------------------#
 
 
