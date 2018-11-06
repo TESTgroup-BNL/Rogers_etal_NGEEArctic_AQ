@@ -26,7 +26,7 @@ rm(list=ls(all=TRUE))   # clear workspace
 graphics.off()          # close any open graphics
 closeAllConnections()   # close any open connections to files
 
-list.of.packages <- c("httr","RCurl","readxl","tools","DEoptim")  # packages needed for script
+list.of.packages <- c("httr","RCurl","readxl","tools","DEoptim","dplyr")  # packages needed for script
 # check for dependencies and install if needed
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, dependencies = TRUE)
@@ -46,6 +46,7 @@ source_GitHubData <-function(url, sep = ",", header = TRUE) {
 library(readxl)
 library(tools)
 library(DEoptim)
+library(dplyr)
 #--------------------------------------------------------------------------------------------------#
 
 
@@ -231,25 +232,14 @@ row.names(samples) <- seq(len=nrow(samples))
 samples <- samples[,-match("Index",names(samples))]
 
 ### Obs stats
-means <- aggregate(.~index$indx,data=index,mean)
+means <- index %>% group_by(indx) %>% summarise_all(funs(mean))
+sdevs <- index %>% group_by(indx) %>% summarise_all(funs(sd))
 names(means) <- paste0("Mean_",names(means))
-sdevs <- aggregate(.~index$indx,data=index,sd)
-#names(sdevs) <- paste0("Sdev_",names(sdevs))
 means <- means[paste0("Mean_",data.names)]
-#sdevs <- sdevs[paste0("Sdev_",data.names)]
 sdevs <- sdevs[data.names]
 CVs <- (sdevs/means)*100
 
-#keep <- which(index$PARi<=aQY.cutoff)
-#mean_Ci_AQY <- aggregate(.~index$indx[which(index$PARi <= aQY.cutoff)],data=index[which(index$PARi <= aQY.cutoff),],mean)
-
-#aQY_subset <- subset(index, PARi <=100)
-#mean_Ci_AQY <- aggregate(.~aQY_subset$indx,data=aQY_subset,mean)
-
-
 # Create output dataframe of diagnostic info
-#out.diagnostics <- data.frame(means[,1:3],Tleaf.CV=CVs$Tleaf,means[4:7],means[,8:11],
-#                              CO2S.CV=CVs$CO2S,means[,12:13])
 out.diagnostics <- data.frame(Leaf_Area=means$Mean_Area,Mean_Tair=means$Mean_Tair,Mean_Tleaf=means$Mean_Tleaf,
                               Tleaf.CV=CVs$Tleaf,Mean_deltaT=means$Mean_deltaT,Mean_RH_R=means$Mean_RH_R,
                               Mean_RH_S=means$Mean_RH_S,Mean_VpdA=means$Mean_VpdA,Mean_VpdL=means$Mean_VpdL,
@@ -280,8 +270,8 @@ RMSE.DEoptim <- array(data=NA,dim=dim(samples)[1])
 RMSE.photo <- array(data=NA,dim=dim(samples)[1])
 
 # Main outer loop
-system.time(for (i in seq_along(1:dim(samples)[1])) {
-#system.time(for (i in 1:4) {
+#system.time(for (i in seq_along(1:dim(samples)[1])) {
+system.time(for (i in 1:4) {
   sub.data <- merge(data,samples[i,],by=names(samples[i,]))
   sub.data = sub.data[order(sub.data$PARi),]
   print("--- Processing Sample: ")

@@ -9,7 +9,7 @@ rm(list=ls(all=TRUE))   # clear workspace
 graphics.off()          # close any open graphics
 closeAllConnections()   # close any open connections to files
 
-list.of.packages <- c("httr","RCurl","readxl","tools")  # packages needed for script
+list.of.packages <- c("httr","RCurl","readxl","tools","dplyr")  # packages needed for script
 # check for dependencies and install if needed
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, dependencies = TRUE)
@@ -27,6 +27,7 @@ source_GitHubData <-function(url, sep = ",", header = TRUE) {
 
 library(readxl)
 library(tools)
+library(dplyr)
 #--------------------------------------------------------------------------------------------------#
 
 
@@ -132,7 +133,6 @@ index <- within(ge.data.qc$GE.data, indx <- as.numeric(interaction(ge.data.qc$Sa
 remove <- which(index$PARi > 100)
 index2 <- index[-remove,]
 
-#which(!index$indx %in% unique(index2$indx))
 remove <- which(samples$Sample_Barcode==1824 | samples$Sample_Barcode==1958 | samples$Sample_Barcode==1877 | samples$Sample_Barcode==2184)
 samples <- samples[-remove,]
 
@@ -141,7 +141,7 @@ samples <- samples[order(samples$Index),]
 row.names(samples) <- seq(len=nrow(samples))
 samples <- samples[,-match("Index",names(samples))]
 
-means <- aggregate(.~index2$indx,data=index2,mean)
+means <- index2 %>% group_by(indx) %>% summarise_all(funs(mean))
 names(means) <- paste0("Mean_",names(means))
 means <- means[paste0("Mean_",data.names)]
 
