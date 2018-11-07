@@ -97,7 +97,7 @@ summary(ge.data)    ## Summary of dataset
 
 #--------------------------------------------------------------------------------------------------#
 ### Main output directory 
-out.dir <- file.path(path.expand('~/scratch/Rogers_etal_NGEEArctic_AQ_Fits/Mean_Ci/2016/'))
+out.dir <- file.path(path.expand('~/scratch/Rogers_etal_NGEEArctic_AQ/Mean_Ci/2016/'))
 unlink(out.dir,recursive=T) # delete old output if rerunning
 if (! file.exists(out.dir)) dir.create(out.dir,recursive=TRUE)
 setwd(file.path(out.dir)) # set working directory
