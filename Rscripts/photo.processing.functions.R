@@ -71,7 +71,6 @@ data.qc <- function(data=NULL,out.dir=NULL,Cond.cutoff=NULL,Ci.cutoff=NULL,
   cond.check <- which(data[,loc[1]]<Cond.cutoff)
   ci.check <- which(data[,loc[2]]<Ci.cutoff[1] | data[,loc[2]]>Ci.cutoff[2])
   all.check <- which(data[,loc[2]]<Ci.cutoff[1] | data[,loc[2]]>Ci.cutoff[2] | data[,loc[1]]<Cond.cutoff)
-  #nms <- unique(sample.info[check1,])
   nms1 <- sample.info[cond.check,]
   vals1 <- data[cond.check,loc[1]]
   nms2 <- sample.info[ci.check,]
@@ -251,18 +250,6 @@ plot.ge.fit <- function(type=c("A-Ci","A-Q"),data,DEoptim.output,params,outdir,f
     plot(data[,loc1[1]],data[,loc1[2]],pch=21,bg="grey70",cex=3,cex.axis=cexaxis,xlim=c(0,range(data[,loc1[1]])[2]),
          ylim=c(0,range(data[,loc1[2]])[2]),cex.lab=cexlab,xlab="Ci",ylab="Photo",main=paste(file))
     box(lwd=2.2)
-    
-    # disabled 20160323
-#    Oxygen <- mm.constants$Oxygen
-#    loc2 <- match(c("KC","KO","GSTAR","TLEAF"),toupper(names(data)))
-#    Kc <- mean(data[,loc2[1]])
-#    Ko <- mean(data[,loc2[2]])
-#    Gstar <- mean(data[,loc2[3]])
-    
-#    plot.x <- (data[,loc1[1]]-Gstar)/(data[,loc1[1]]+(Kc*(1+Oxygen/Ko)))
-#    plot(plot.x,data[,loc1[2]],pch=21,bg="grey70",cex=3,cex.axis=cexaxis,xlim=c(0,range(plot.x)[2]),
-#         ylim=c(0,range(data[,loc1[2]])[2]),cex.lab=cexlab,xlab="Ci-Gstar/Ci+Km",ylab="Photo",main=paste(file))
-#    box(lwd=2.2)
 
     # DEoptim trace plots
     if (f.model==1){
@@ -391,8 +378,6 @@ plot.ge.fit <- function(type=c("A-Ci","A-Q"),data,DEoptim.output,params,outdir,f
     # Plot just the points used in the fit
     points(data[,loc1[1]][which(data[,loc1[1]]<=aQY.cutoff)],data[,loc1[2]][which(data[,loc1[1]]<=aQY.cutoff)],
            pch=21,bg="black",cex=pt.cex)
-    #points(data[,loc1[1]][which(data[,loc1[1]]>=Amax.cutoff)],data[,loc1[2]][which(data[,loc1[1]]>=Amax.cutoff)],
-    #      pch=21,bg="white",cex=pt.cex)
     points(data[,loc1[1]][which(data[,loc1[1]]<aQY.lower.cutoff | data[,loc1[1]]>=high_light.cutoff)],
            data[,loc1[2]][which(data[,loc1[1]]<aQY.lower.cutoff | data[,loc1[1]]>=high_light.cutoff)],
            pch=21,bg="dark grey",cex=pt.cex)
@@ -401,8 +386,6 @@ plot.ge.fit <- function(type=c("A-Ci","A-Q"),data,DEoptim.output,params,outdir,f
                                   paste("Convex = ",round(convex.plot,2)),paste("LUE.max = ",round(LUE.plot,4)),
                                   paste("Rd = ",round(Rd.plot,4)),
                                   paste("RMSE = ",round(RMSE.plot,2))),bty="n",cex=2)
-    #legend("topleft",legend=c("aQY","Photo"),lty=c(2,1),
-    #       col=c("dark blue","dark grey"),bty="n",lwd=6.3,seg.len=3.5,cex=1.5)
     legend("topleft",legend=c("aQY","Photo","Rd & AQY","Amax & Convex", "not fit"),lty=c(2,1,0,0,0),
            pch=c(NA,NA,21,21,21),pt.bg=c(NA,NA,"black","white","dark grey"),
            col=c("dark blue","dark grey","black","black", "dark grey"),bty="n",lwd=c(6.3,6.3,1,1,1),
@@ -456,7 +439,6 @@ plot.temp.response <- function(type=c("Arrhenius","Peaked","June"),var,data,DEop
   
   if (type=="Arrhenius"){
     loc1 <- match(c("MEAN.TLEAF",paste(toupper(var))),toupper(names(data)))
-    #loc1 <- match(c("Mean.Tleaf",toupper(var)),toupper(names(data)))
     pdf(paste(outdir,sep,file,".pdf",sep=""),height=8,width=10)
     plot(data[,loc1[1]],data[,loc1[2]],pch=21,bg="grey70",cex=3,cex.axis=cexaxis,xlim=c(range(data[,loc1[1]])[1]-2,
                                                                                         range(data[,loc1[1]])[2]),
