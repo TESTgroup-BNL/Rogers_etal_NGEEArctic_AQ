@@ -1,4 +1,4 @@
-# Rogers_etal_NGEEArctic_AQ
+# Rogers_etal_NGEEArctic_LightResponse
 R scripts for fitting photosynthetic light response curves and inverting leaf reflectance observations with the PROSPECT-5 leaf radiative transfer model (RTM).  These scripts were used in the development of the Rogers et al. (in prep) manuscript 
 
 ## Contains:
