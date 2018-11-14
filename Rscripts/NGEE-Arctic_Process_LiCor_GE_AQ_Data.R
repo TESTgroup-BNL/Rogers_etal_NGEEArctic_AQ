@@ -271,7 +271,6 @@ RMSE.photo <- array(data=NA,dim=dim(samples)[1])
 
 # Main outer loop
 for (i in seq_along(1:dim(samples)[1])) {
-#system.time(for (i in 1:4) {
   sub.data <- merge(data,samples[i,],by=names(samples[i,]))
   sub.data = sub.data[order(sub.data$PARi),]
   print("--- Processing Sample: ")
