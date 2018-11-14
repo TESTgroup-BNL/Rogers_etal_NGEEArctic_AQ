@@ -198,7 +198,7 @@ if (use_GitHub) {
 #--------------------------------------------------------------------------------------------------#
 ### Setup output dirs
 dlm <- .Platform$file.sep # <--- What is the platform specific delimiter?
-aq.fig.dir <- file.path(out.dir,"AQ_Diagnostics")
+aq.fig.dir <- file.path(out.dir,"LightResponseCurve_Fit_Diagnostics")
 if (! file.exists(aq.fig.dir)) dir.create(aq.fig.dir)
 #--------------------------------------------------------------------------------------------------#
 
