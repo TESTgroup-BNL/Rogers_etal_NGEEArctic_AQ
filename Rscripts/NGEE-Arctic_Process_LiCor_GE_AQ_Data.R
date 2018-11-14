@@ -17,7 +17,7 @@
 #   install.packages('DEoptim')
 #
 #
-#  	--- Last updated: 11.06.2018 By Shawn P. Serbin <sserbin@bnl.gov>
+#  	--- Last updated: 11.14.2018 By Shawn P. Serbin <sserbin@bnl.gov>
 ####################################################################################################
 
 
@@ -65,7 +65,7 @@ if (use_GitHub) {
 
 ### Define directory containing the input LiCor 6400 data file to process 
 in.dir <- file.path('Rogers_etal_NGEEArctic_AQ/input_data/')  # example, or see below when using GitHub as the source
-dataset <- 'NGEE-Arctic_2016_AQ_Raw_Data.csv'  # using a specific data file on the local machine
+dataset <- 'NGEE-Arctic_Light_Response_Barrow_2016_Raw_Data.csv'  # using a specific data file on the local machine
 
 ### Define input data file name.
 if (use_GitHub) {

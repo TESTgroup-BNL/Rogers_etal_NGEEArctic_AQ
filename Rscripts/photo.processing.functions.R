@@ -57,7 +57,7 @@ data.qc <- function(data=NULL,out.dir=NULL,Cond.cutoff=NULL,Ci.cutoff=NULL,
   keep <- keep[!is.na(keep)]
   
   ### Extract sample info
-  ind1 <- which(toupper(names(data))=="DATE")
+  ind1 <- which(toupper(names(data))=="SAMPLE_DATE")
   sample.info <- data[,seq(1,ind1,1)]  # keep everything to the left of Date as sample info
   data <- data[,keep]
   
