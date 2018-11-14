@@ -47,7 +47,6 @@ data.qc <- function(data=NULL,out.dir=NULL,Cond.cutoff=NULL,Ci.cutoff=NULL,
   }
   
   ### Find data columns
-  #pattern <- c("Tair","Tleaf","deltaT","RH_R","RH_S","PRESS","PARi","CO2R","PHOTO","COND","Ci")  # UPDATE THESE TO MATCH TEST TEMPLATE!
   pattern <- toupper(c("Area","Tair","Tleaf","deltaT","RH_R","RH_S","VpdA","VpdL","PARi","PARo","Press","Ci_Ca",
                "CO2R","CO2S","Photo","Cond","Ci"))
   x <- toupper(names(data))
@@ -84,11 +83,6 @@ data.qc <- function(data=NULL,out.dir=NULL,Cond.cutoff=NULL,Ci.cutoff=NULL,
     # Create unique index for each sample group
     temp.data.index <- within(temp.data, indx <- as.numeric(interaction(sample.info, 
                                                             drop=TRUE,lex.order=TRUE)))
-    #Mean.Tleaf <- aggregate(Tleaf~indx,data=temp.data.index,mean)
-    #Stdev.Tleaf <- aggregate(Tleaf~indx,data=temp.data.index,sd)
-    #names(Mean.Tleaf) <- c("indx","Mean.Tleaf")
-    #names(Stdev.Tleaf) <- c("indx","Stdev.Tleaf")
-    #aggregate(Tleaf~indx,data=temp.data.index, FUN = function(x) quantile(x, probs  = c(0.05,0.95)))
     stats <- data.frame(Mean.Tleaf=aggregate(Tleaf~indx,data=temp.data.index,mean),
                         Stdev.Tleaf=aggregate(Tleaf~indx,data=temp.data.index,sd),
                         CI05=aggregate(Tleaf~indx,data=temp.data.index, 
@@ -97,7 +91,6 @@ data.qc <- function(data=NULL,out.dir=NULL,Cond.cutoff=NULL,Ci.cutoff=NULL,
                                        FUN = function(x) quantile(x, probs  = 0.95)))
     stats <- stats[,-c(3,5,7)]
     names(stats) <- c("indx","Mean.Tleaf","Stdev.Tleaf","L05.Tleaf","U95.Tleaf")
-    #temp.data2 <- merge(temp.data.index,Mean.Tleaf,by="indx",sort=F) # Preserve original order
     temp.data2 <- merge(temp.data.index,stats,by="indx",sort=F) # Preserve original order
     loc <- match(c("INDX"),toupper(names(temp.data2)))
     temp.data2 <- temp.data2[,-loc[1]]

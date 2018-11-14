@@ -69,7 +69,7 @@ dataset <- 'NGEE-Arctic_Light_Response_Barrow_2016_Raw_Data.csv'  # using a spec
 
 ### Define input data file name.
 if (use_GitHub) {
-  githubURL <- "https://raw.githubusercontent.com/TESTgroup-BNL/Rogers_etal_NGEEArctic_AQ/master/input_data/NGEE-Arctic_2016_AQ_Raw_Data.csv"
+  githubURL <- "https://raw.githubusercontent.com/TESTgroup-BNL/Rogers_etal_NGEEArctic_LightResponse/master/input_data/NGEE-Arctic_Light_Response_Barrow_2016_Raw_Data.csv"
   dataset <- source_GitHubData(githubURL)
   ge.data <- dataset
 } else {
@@ -107,7 +107,7 @@ summary(ge.data)    ## Summary of dataset
 
 #--------------------------------------------------------------------------------------------------#
 ### Define main output directory 
-out.dir <- file.path(path.expand('~/scratch/Rogers_etal_NGEEArctic_AQ/Rogers_etal_NGEEArctic_AQ_Fits/'))
+out.dir <- file.path(path.expand('~/scratch/Rogers_etal_NGEEArctic_LightResponse/Rogers_etal_NGEEArctic_LightResponseCurve_Fits/'))
 unlink(out.dir,recursive=T) # delete old output if rerunning
 if (! file.exists(out.dir)) dir.create(out.dir,recursive=TRUE)
 setwd(file.path(out.dir)) # set working directory
