@@ -1,5 +1,5 @@
 # Rogers_etal_NGEEArctic_LightResponse
-R scripts for fitting photosynthetic light response curves and inverting leaf reflectance observations with the PROSPECT-5 leaf radiative transfer model (RTM).  These scripts were used in the development of the Rogers et al. (2019) *New Phytologist* 
+R scripts for fitting photosynthetic light response curves and inverting leaf reflectance observations with the PROSPECT-5 leaf radiative transfer model (RTM).  These scripts were used in the development of the Rogers et al. (2019) Terrestrial biosphere models may overestimate Arctic CO2 assimilation if they do not account for decreased quantum yield and convexity at low temperature, DOI: https://doi.org/10.1111/nph.15750 
 
 ## Contains:
 Compiled LiCor light response curve measurements and scripts for fitting light response curve data and for calculating leaf absorptance from measurements of leaf reflectance
