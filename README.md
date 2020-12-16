@@ -13,3 +13,6 @@ Rogers A, Ely KS, Serbin SP 2018. Leaf photosynthetic parameters: quantum yield,
 
 ### Leaf reflectance observations:
 Serbin SP, Lieberman-Cribbin W, Ely KS, Rogers A. 2018. NGEE Arctic Leaf Spectral Reflectance and Transmittance, Barrow, Alaska, 2014-2016. Next Generation Ecosystem Experiments Arctic Data Collection. Carbon Dioxide Information Analysis Center, Oak Ridge National Laboratory, Oak Ridge, TN, USA. doi: 10.5440/1482337.
+
+Zenodo code archive DOI: <br>
+[![DOI](https://zenodo.org/badge/156286836.svg)](https://zenodo.org/badge/latestdoi/156286836)
